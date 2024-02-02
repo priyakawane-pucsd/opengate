@@ -1,0 +1,8 @@
+Name: opengate
+Build: local
+Controller: 
+  Port: 8080
+  GinModeDebug: false
+Repository:
+  Name: MONGO
+  

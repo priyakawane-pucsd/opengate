@@ -1,0 +1,5 @@
+Name: opengate
+Build: local
+Controller: 
+  Port: 9090
+  GinModeDebug: false
