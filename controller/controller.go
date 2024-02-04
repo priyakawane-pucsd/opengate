@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"opengate/controller/ping"
+	"opengate/controller/swagger"
 	"opengate/services"
 
 	"github.com/gin-gonic/gin"
@@ -33,7 +34,7 @@ func (c *Controller) Listen(ctx context.Context) error {
 
 	//registering controllers
 	ping.NewPingController(ctx, &c.config.Ping, c.srvFactory.GetPingService()).Register(router)
-
+	swagger.NewSwaggerController(ctx).Register(router)
 	log.Printf("HTTP server started listening on :%d", c.config.Port)
 	return router.Run(fmt.Sprintf(":%d", c.config.Port))
 }

@@ -3,6 +3,8 @@ Build: local
 Controller: 
   Port: 8080
   GinModeDebug: false
+  Ping:
+    DB: true
 Repository:
   Name: MONGO
   

@@ -1,0 +1,28 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/opengate/ping/": {
+            "get": {
+                "description": "Pings the server and returns \"Okay\" if successful.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Ping"
+                ],
+                "summary": "Pings the server.",
+                "responses": {
+                    "200": {
+                        "description": "Okay",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

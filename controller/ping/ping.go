@@ -3,6 +3,7 @@ package ping
 import (
 	"context"
 	"net/http"
+	"opengate/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,11 +30,20 @@ func (pc *PingController) Register(router gin.IRouter) {
 	pingRouter.GET("/", pc.Ping)
 }
 
+// Ping handles the ping endpoint.
+// @Summary Pings the server.
+// @Description Pings the server and returns "Okay" if successful.
+// @Tags Ping
+// @Produce json
+// @Success 200 {string} string "Okay"
+// @Error 500 utils.CustomError
+// @Router /opengate/ping/ [get]
 func (pc *PingController) Ping(ctx *gin.Context) {
 	if pc.cfg.DB {
 		err := pc.service.Ping(ctx)
 		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, "failed to ping db")
+			utils.WriteError(ctx, err)
+			return
 		}
 	}
 	ctx.JSON(http.StatusOK, "Okay")

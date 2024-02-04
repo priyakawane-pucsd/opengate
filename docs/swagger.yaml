@@ -1,0 +1,17 @@
+info:
+  contact: {}
+paths:
+  /opengate/ping/:
+    get:
+      description: Pings the server and returns "Okay" if successful.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Okay
+          schema:
+            type: string
+      summary: Pings the server.
+      tags:
+      - Ping
+swagger: "2.0"

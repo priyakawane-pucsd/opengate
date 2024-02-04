@@ -1,6 +1,9 @@
 package mongo
 
-import "context"
+import (
+	"context"
+	"opengate/utils"
+)
 
 type Repository struct {
 }
@@ -11,5 +14,5 @@ func NewRepository(ctx context.Context, config *Config) *Repository {
 
 func (r *Repository) PingDB(ctx context.Context) error {
 	//todo
-	return nil
+	return utils.NewInternalServerError("Ping DB Not Implemented!")
 }
