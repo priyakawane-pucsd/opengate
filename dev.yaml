@@ -5,6 +5,13 @@ Controller:
   GinModeDebug: false
   Ping:
     DB: true
+  Config:
+    DB: true
 Repository:
   Name: MONGO
+  Mongo: 
+    Host: localhost:27017
+    Database: opengate
+    UserName: bappa
+    Password: bappa
   

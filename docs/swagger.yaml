@@ -1,6 +1,197 @@
+definitions:
+  dto.ConfigByIdResponse:
+    properties:
+      config:
+        $ref: '#/definitions/dto.ServiceConfig'
+      statusCode:
+        type: integer
+    type: object
+  dto.CreateServiceConfigRequest:
+    properties:
+      _id:
+        type: string
+      endpoint:
+        type: string
+      regex:
+        type: string
+    type: object
+  dto.CreateServiceConfigResponse:
+    properties:
+      _id:
+        type: string
+      statusCode:
+        type: integer
+    type: object
+  dto.DeleteConfigResponse:
+    properties:
+      message:
+        type: string
+      status_code:
+        type: integer
+    type: object
+  dto.ListConfigResponse:
+    properties:
+      configs:
+        items:
+          $ref: '#/definitions/dto.ServiceConfig'
+        type: array
+      statusCode:
+        type: integer
+    type: object
+  dto.PingResponse:
+    properties:
+      message: {}
+      statusCode:
+        type: integer
+    type: object
+  dto.ServiceConfig:
+    properties:
+      _id:
+        type: string
+      createdOn:
+        type: string
+      endpoint:
+        type: string
+      regex:
+        type: string
+      updatedOn:
+        type: string
+    type: object
+  utils.CustomError:
+    properties:
+      message:
+        type: string
+      statusCode:
+        type: integer
+    type: object
 info:
   contact: {}
 paths:
+  /opengate/config/:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of all service configurations.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            items:
+              $ref: '#/definitions/dto.ListConfigResponse'
+            type: array
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+      summary: Get all service configurations
+      tags:
+      - Config
+    put:
+      consumes:
+      - application/json
+      description: Create or update service configuration based on the provided request.
+      parameters:
+      - description: Ping ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request body containing configuration details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateServiceConfigRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            $ref: '#/definitions/dto.CreateServiceConfigResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+      summary: Create or update service configuration.
+      tags:
+      - Config
+  /opengate/config/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a service configuration based on the provided ID.
+      parameters:
+      - description: ID of the service configuration to delete
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            $ref: '#/definitions/dto.DeleteConfigResponse'
+        "400":
+          description: Invalid ID format
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "404":
+          description: Config not found
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+      summary: Delete a service configuration by ID.
+      tags:
+      - Config
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a service configuration based on the provided request
+        containing the ID.
+      parameters:
+      - description: ID of the service configuration
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            $ref: '#/definitions/dto.ConfigByIdResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "404":
+          description: Config not found
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+      summary: Get a service configuration by ID.
+      tags:
+      - Config
   /opengate/ping/:
     get:
       description: Pings the server and returns "Okay" if successful.
@@ -8,9 +199,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: Okay
+          description: OK
           schema:
-            type: string
+            $ref: '#/definitions/dto.PingResponse'
       summary: Pings the server.
       tags:
       - Ping

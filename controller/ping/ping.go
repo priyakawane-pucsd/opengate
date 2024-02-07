@@ -2,7 +2,7 @@ package ping
 
 import (
 	"context"
-	"net/http"
+	"opengate/models/dto"
 	"opengate/utils"
 
 	"github.com/gin-gonic/gin"
@@ -35,7 +35,7 @@ func (pc *PingController) Register(router gin.IRouter) {
 // @Description Pings the server and returns "Okay" if successful.
 // @Tags Ping
 // @Produce json
-// @Success 200 {string} string "Okay"
+// @Success 200 {object} dto.PingResponse
 // @Error 500 utils.CustomError
 // @Router /opengate/ping/ [get]
 func (pc *PingController) Ping(ctx *gin.Context) {
@@ -46,5 +46,5 @@ func (pc *PingController) Ping(ctx *gin.Context) {
 			return
 		}
 	}
-	ctx.JSON(http.StatusOK, "Okay")
+	utils.WriteResponse(ctx, dto.PingResponse{StatusCode: 200, Message: "Okay"})
 }
