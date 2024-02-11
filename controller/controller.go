@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"opengate/controller/config"
+	"opengate/controller/gateway"
 	"opengate/controller/ping"
 	"opengate/controller/swagger"
 	"opengate/services"
@@ -18,6 +19,7 @@ type Config struct {
 	GinModeDebug bool
 	Ping         ping.Config
 	Config       config.Config
+	Gateway      gateway.Config
 }
 
 type Controller struct {
@@ -39,6 +41,8 @@ func (c *Controller) Listen(ctx context.Context) error {
 	ping.NewPingController(ctx, &c.config.Ping, c.srvFactory.GetPingService()).Register(router)
 	swagger.NewSwaggerController(ctx).Register(router)
 	config.NewConfigController(ctx, &c.config.Config, c.srvFactory.GetConfigService()).Register(router)
+	gateway.NewGatewayController(ctx, &c.config.Gateway, c.srvFactory.GetGatewayService()).Register(router)
+
 	logger.Info(ctx, "swagger link: http://localhost:%d/opengate/swagger/index.html", c.config.Port)
 	log.Printf("HTTP server started listening on :%d", c.config.Port)
 	return router.Run(fmt.Sprintf(":%d", c.config.Port))
