@@ -19,7 +19,8 @@ type ConfigController struct {
 }
 
 type Service interface {
-	CreateUpdateConfig(ctx context.Context, req *dto.CreateServiceConfigRequest) (*dto.CreateServiceConfigResponse, error)
+	// CreateUpdateConfig(ctx context.Context, req *dto.CreateServiceConfigRequest) (*dto.CreateServiceConfigResponse, error)
+	CreateUpdateConfig(ctx context.Context, req *dto.CreateConfigServiceRequest) (*dto.CreateConfigServiceResponse, error)
 	GetAllConfigs(ctx context.Context) (*dto.ListConfigResponse, error)
 	GetConfigById(ctx context.Context, id string) (*dto.ConfigByIdResponse, error)
 	DeleteConfigById(ctx context.Context, id string) (*dto.DeleteConfigResponse, error)
@@ -43,14 +44,13 @@ func (cc *ConfigController) Register(router gin.IRouter) {
 // @Tags Config
 // @Accept json
 // @Produce json
-// @Param id path string true "Ping ID"
-// @Param request body dto.CreateServiceConfigRequest true "Request body containing configuration details"
-// @Success 200 {object} dto.CreateServiceConfigResponse "Successful response"
+// @Param request body dto.CreateConfigServiceRequest true "Request body containing configuration details"
+// @Success 200 {object} dto.CreateConfigServiceResponse "Successful response"
 // @Failure 400 {object} utils.CustomError "Invalid request body"
 // @Failure 500 {object} utils.CustomError "Internal server error"
 // @Router /opengate/config/ [put]
 func (cc *ConfigController) CreateUpdateConfig(ctx *gin.Context) {
-	var req dto.CreateServiceConfigRequest
+	var req dto.CreateConfigServiceRequest
 	err := ctx.BindJSON(&req)
 	if err != nil {
 		logger.Error(ctx, "Invalid Body: %s", err.Error())

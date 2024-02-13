@@ -22,13 +22,13 @@ func NewService(ctx context.Context, repo Repository) *Service {
 	return &Service{repo: repo}
 }
 
-func (s *Service) CreateUpdateConfig(ctx context.Context, req *dto.CreateServiceConfigRequest) (*dto.CreateServiceConfigResponse, error) {
+func (s *Service) CreateUpdateConfig(ctx context.Context, req *dto.CreateConfigServiceRequest) (*dto.CreateConfigServiceResponse, error) {
 	cfg := req.ToMongoObject()
 	err := s.repo.CreateUpdateConfig(ctx, cfg)
 	if err != nil {
 		return nil, err
 	}
-	return &dto.CreateServiceConfigResponse{StatusCode: http.StatusCreated, Id: cfg.Id}, nil
+	return &dto.CreateConfigServiceResponse{StatusCode: http.StatusCreated, Id: cfg.Id}, nil
 }
 
 func (s *Service) GetAllConfigs(ctx context.Context) (*dto.ListConfigResponse, error) {

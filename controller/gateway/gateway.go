@@ -2,6 +2,7 @@ package gateway
 
 import (
 	"context"
+	"opengate/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,7 +17,7 @@ type GatewayController struct {
 }
 
 type Service interface {
-	HandleRequest(ctx *gin.Context)
+	HandleRequest(ctx *gin.Context) error
 }
 
 func NewGatewayController(ctx context.Context, cfg *Config, s Service) *GatewayController {
@@ -28,5 +29,8 @@ func (gc *GatewayController) Register(router gin.IRouter) {
 }
 
 func (gc *GatewayController) handleGatewayRequest(ctx *gin.Context) {
-	gc.service.HandleRequest(ctx)
+	err := gc.service.HandleRequest(ctx)
+	if err != nil {
+		utils.WriteError(ctx, err)
+	}
 }

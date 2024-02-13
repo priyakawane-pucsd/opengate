@@ -5,23 +5,32 @@ import (
 	"time"
 )
 
+// 13-02-2024 Newly added
+type CreateConfigServiceRequest struct {
+	Id            string                     `json:"_id,omitempty"`
+	Type          string                     `json:"type,omitempty"`
+	ServiceConfig CreateServiceConfigRequest `json:"serviceConfig,omitempty"`
+}
+
 type CreateServiceConfigRequest struct {
-	Id       string `json:"_id,omitempty"`
-	Endpoint string `json:"endpoint"`
-	Regex    string `json:"regex"`
+	Endpoint      string   `json:"endpoint"`
+	Regex         string   `json:"regex"`
+	Authorization bool     `json:"authorization"` //new
+	Roles         []string `json:"roles"`         //new
 }
 
 type GetServiceConfigRequestById struct {
 	Id string `json:"_id,omitempty"`
 }
 
-func (r *CreateServiceConfigRequest) ToMongoObject() *dao.ServiceConfig {
+// new added
+func (r *CreateConfigServiceRequest) ToMongoObject() *dao.ServiceConfig {
 	return &dao.ServiceConfig{
-		Id:        r.Id,
-		Endpoint:  r.Endpoint,
-		Regex:     r.Regex,
-		CreatedOn: time.Now().UnixMilli(),
-		UpdatedOn: time.Now().UnixMilli(),
+		Id:            r.Id,
+		Type:          r.Type,
+		ServiceConfig: dao.CreateServiceConfigRequest(r.ServiceConfig),
+		CreatedOn:     time.Now().UnixMilli(),
+		UpdatedOn:     time.Now().UnixMilli(),
 	}
 }
 
@@ -30,7 +39,7 @@ type ConfigByIdResponse struct {
 	StatusCode int           `json:"statusCode"`
 }
 
-type CreateServiceConfigResponse struct {
+type CreateConfigServiceResponse struct {
 	Id         string `json:"_id,omitempty"`
 	StatusCode int    `json:"statusCode"`
 }
@@ -46,9 +55,9 @@ type DeleteConfigResponse struct {
 }
 
 type ServiceConfig struct {
-	Id        string `json:"_id,omitempty"`
-	Endpoint  string `json:"endpoint"`
-	Regex     string `json:"regex"`
-	CreatedOn string `json:"createdOn"`
-	UpdatedOn string `json:"updatedOn"`
+	Id            string                     `json:"_id,omitempty"`
+	Type          string                     `json:"type,omitempty"`
+	ServiceConfig CreateServiceConfigRequest `json:"serviceConfig,omitempty"`
+	CreatedOn     string                     `json:"createdOn"`
+	UpdatedOn     string                     `json:"updatedOn"`
 }

@@ -15,6 +15,52 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/opengate/authConfig": {
+            "put": {
+                "description": "Create or update service configuration based on the provided request.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AuthConfig"
+                ],
+                "summary": "Create or update service configuration.",
+                "parameters": [
+                    {
+                        "description": "Request body containing configuration details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateAuthConfigServiceRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateAuthConfigResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body",
+                        "schema": {
+                            "$ref": "#/definitions/utils.CustomError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.CustomError"
+                        }
+                    }
+                }
+            }
+        },
         "/opengate/config/": {
             "get": {
                 "description": "Retrieve a list of all service configurations.",
@@ -66,19 +112,12 @@ const docTemplate = `{
                 "summary": "Create or update service configuration.",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Ping ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
                         "description": "Request body containing configuration details",
                         "name": "request",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.CreateServiceConfigRequest"
+                            "$ref": "#/definitions/dto.CreateConfigServiceRequest"
                         }
                     }
                 ],
@@ -86,7 +125,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Successful response",
                         "schema": {
-                            "$ref": "#/definitions/dto.CreateServiceConfigResponse"
+                            "$ref": "#/definitions/dto.CreateConfigServiceResponse"
                         }
                     },
                     "400": {
@@ -224,6 +263,21 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dto.AuthConfigRequest": {
+            "type": "object",
+            "properties": {
+                "endpoint": {
+                    "type": "string"
+                },
+                "headers": {
+                    "description": "new",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "dto.ConfigByIdResponse": {
             "type": "object",
             "properties": {
@@ -235,21 +289,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.CreateServiceConfigRequest": {
-            "type": "object",
-            "properties": {
-                "_id": {
-                    "type": "string"
-                },
-                "endpoint": {
-                    "type": "string"
-                },
-                "regex": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.CreateServiceConfigResponse": {
+        "dto.CreateAuthConfigResponse": {
             "type": "object",
             "properties": {
                 "_id": {
@@ -257,6 +297,67 @@ const docTemplate = `{
                 },
                 "statusCode": {
                     "type": "integer"
+                }
+            }
+        },
+        "dto.CreateAuthConfigServiceRequest": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "authConfig1": {
+                    "$ref": "#/definitions/dto.AuthConfigRequest"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateConfigServiceRequest": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "serviceConfig": {
+                    "$ref": "#/definitions/dto.CreateServiceConfigRequest"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateConfigServiceResponse": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "statusCode": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.CreateServiceConfigRequest": {
+            "type": "object",
+            "properties": {
+                "authorization": {
+                    "description": "new",
+                    "type": "boolean"
+                },
+                "endpoint": {
+                    "type": "string"
+                },
+                "regex": {
+                    "type": "string"
+                },
+                "roles": {
+                    "description": "new",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
@@ -303,10 +404,10 @@ const docTemplate = `{
                 "createdOn": {
                     "type": "string"
                 },
-                "endpoint": {
-                    "type": "string"
+                "serviceConfig": {
+                    "$ref": "#/definitions/dto.CreateServiceConfigRequest"
                 },
-                "regex": {
+                "type": {
                     "type": "string"
                 },
                 "updatedOn": {

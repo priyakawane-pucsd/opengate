@@ -1,4 +1,14 @@
 definitions:
+  dto.AuthConfigRequest:
+    properties:
+      endpoint:
+        type: string
+      headers:
+        description: new
+        items:
+          type: string
+        type: array
+    type: object
   dto.ConfigByIdResponse:
     properties:
       config:
@@ -6,21 +16,52 @@ definitions:
       statusCode:
         type: integer
     type: object
-  dto.CreateServiceConfigRequest:
-    properties:
-      _id:
-        type: string
-      endpoint:
-        type: string
-      regex:
-        type: string
-    type: object
-  dto.CreateServiceConfigResponse:
+  dto.CreateAuthConfigResponse:
     properties:
       _id:
         type: string
       statusCode:
         type: integer
+    type: object
+  dto.CreateAuthConfigServiceRequest:
+    properties:
+      _id:
+        type: string
+      authConfig1:
+        $ref: '#/definitions/dto.AuthConfigRequest'
+      type:
+        type: string
+    type: object
+  dto.CreateConfigServiceRequest:
+    properties:
+      _id:
+        type: string
+      serviceConfig:
+        $ref: '#/definitions/dto.CreateServiceConfigRequest'
+      type:
+        type: string
+    type: object
+  dto.CreateConfigServiceResponse:
+    properties:
+      _id:
+        type: string
+      statusCode:
+        type: integer
+    type: object
+  dto.CreateServiceConfigRequest:
+    properties:
+      authorization:
+        description: new
+        type: boolean
+      endpoint:
+        type: string
+      regex:
+        type: string
+      roles:
+        description: new
+        items:
+          type: string
+        type: array
     type: object
   dto.DeleteConfigResponse:
     properties:
@@ -50,9 +91,9 @@ definitions:
         type: string
       createdOn:
         type: string
-      endpoint:
-        type: string
-      regex:
+      serviceConfig:
+        $ref: '#/definitions/dto.CreateServiceConfigRequest'
+      type:
         type: string
       updatedOn:
         type: string
@@ -67,6 +108,36 @@ definitions:
 info:
   contact: {}
 paths:
+  /opengate/authConfig:
+    put:
+      consumes:
+      - application/json
+      description: Create or update service configuration based on the provided request.
+      parameters:
+      - description: Request body containing configuration details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateAuthConfigServiceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            $ref: '#/definitions/dto.CreateAuthConfigResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+      summary: Create or update service configuration.
+      tags:
+      - AuthConfig
   /opengate/config/:
     get:
       consumes:
@@ -97,24 +168,19 @@ paths:
       - application/json
       description: Create or update service configuration based on the provided request.
       parameters:
-      - description: Ping ID
-        in: path
-        name: id
-        required: true
-        type: string
       - description: Request body containing configuration details
         in: body
         name: request
         required: true
         schema:
-          $ref: '#/definitions/dto.CreateServiceConfigRequest'
+          $ref: '#/definitions/dto.CreateConfigServiceRequest'
       produces:
       - application/json
       responses:
         "200":
           description: Successful response
           schema:
-            $ref: '#/definitions/dto.CreateServiceConfigResponse'
+            $ref: '#/definitions/dto.CreateConfigServiceResponse'
         "400":
           description: Invalid request body
           schema:
