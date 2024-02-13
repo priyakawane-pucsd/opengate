@@ -32,28 +32,28 @@ func NewService(ctx context.Context, repo Repository) *Service {
 }
 
 // completed this function
-func (s *Service) getConfig(urlPath string) *dao.ServiceConfig {
-	var conf *dao.ServiceConfig
+func (s *Service) getConfig(ctx context.Context, urlPath string) *dao.ServiceConfig {
 	for _, c := range s.srvConfigs {
 		r, err := regexp.Compile(*&c.ServiceConfig.Regex)
 		if err != nil {
-			return nil
+			logger.Error(ctx, "invalid regular expression in config: %v", c)
+			continue
 		}
 
 		match := r.FindString(urlPath)
 		if match != "" {
-			conf = c
+			return c
 		}
 	}
-	return conf
+	return nil
 }
 
 func (s *Service) HandleRequest(ctx *gin.Context) error {
-	cfg := s.getConfig(ctx.Param("path"))
+	cfg := s.getConfig(ctx, ctx.Param("path"))
 	if cfg == nil {
 		return utils.NewCustomError(http.StatusNotFound, "unknown service")
 	}
-	remote, err := url.Parse(cfg.ServiceConfig.Regex)
+	remote, err := url.Parse(cfg.ServiceConfig.Endpoint)
 	if err != nil {
 		return utils.NewCustomError(http.StatusInternalServerError, "invalid endpoint config in db")
 	}
