@@ -1,13 +1,20 @@
 definitions:
-  dto.AuthConfigRequest:
+  dto.AuthConfig:
     properties:
       endpoint:
         type: string
+      forwardHeaders:
+        items:
+          $ref: '#/definitions/dto.ForwardHeader'
+        type: array
       headers:
-        description: new
         items:
           type: string
         type: array
+      requestMethod:
+        type: string
+      rolesKey:
+        type: string
     type: object
   dto.ConfigByIdResponse:
     properties:
@@ -27,8 +34,8 @@ definitions:
     properties:
       _id:
         type: string
-      authConfig1:
-        $ref: '#/definitions/dto.AuthConfigRequest'
+      authConfig:
+        $ref: '#/definitions/dto.AuthConfig'
       type:
         type: string
     type: object
@@ -69,6 +76,13 @@ definitions:
         type: string
       status_code:
         type: integer
+    type: object
+  dto.ForwardHeader:
+    properties:
+      address:
+        type: string
+      key:
+        type: string
     type: object
   dto.ListConfigResponse:
     properties:

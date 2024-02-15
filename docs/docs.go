@@ -263,18 +263,29 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "dto.AuthConfigRequest": {
+        "dto.AuthConfig": {
             "type": "object",
             "properties": {
                 "endpoint": {
                     "type": "string"
                 },
+                "forwardHeaders": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.ForwardHeader"
+                    }
+                },
                 "headers": {
-                    "description": "new",
                     "type": "array",
                     "items": {
                         "type": "string"
                     }
+                },
+                "requestMethod": {
+                    "type": "string"
+                },
+                "rolesKey": {
+                    "type": "string"
                 }
             }
         },
@@ -306,8 +317,8 @@ const docTemplate = `{
                 "_id": {
                     "type": "string"
                 },
-                "authConfig1": {
-                    "$ref": "#/definitions/dto.AuthConfigRequest"
+                "authConfig": {
+                    "$ref": "#/definitions/dto.AuthConfig"
                 },
                 "type": {
                     "type": "string"
@@ -369,6 +380,17 @@ const docTemplate = `{
                 },
                 "status_code": {
                     "type": "integer"
+                }
+            }
+        },
+        "dto.ForwardHeader": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "key": {
+                    "type": "string"
                 }
             }
         },

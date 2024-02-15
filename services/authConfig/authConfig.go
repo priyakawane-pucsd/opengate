@@ -12,7 +12,7 @@ type Service struct {
 }
 
 type Repository interface {
-	CreateUpdateAuthConfig(ctx context.Context, cfg *dao.AuthConfigService) error
+	CreateUpdateAuthConfig(ctx context.Context, cfg *dao.AuthConfig) error
 }
 
 func NewService(ctx context.Context, repo Repository) *Service {

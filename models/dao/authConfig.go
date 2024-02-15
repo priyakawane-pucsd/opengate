@@ -1,14 +1,23 @@
 package dao
 
-type AuthConfigService struct {
-	Id         string                   `bson:"_id,omitempty"`
-	Type       string                   `bson:"type,omitempty"`
-	AuthConfig CreateAuthConfigRequest1 `bson:"authConfig,omitempty"`
-	CreatedOn  int64                    `bson:"createdOn"`
-	UpdatedOn  int64                    `bson:"updatedOn"`
+type AuthConfig struct {
+	Id         string           `bson:"_id,omitempty"`
+	Type       string           `bson:"type,omitempty"`
+	AuthConfig CreateAuthConfig `bson:"authConfig,omitempty"`
+	CreatedOn  int64            `bson:"createdOn"`
+	UpdatedOn  int64            `bson:"updatedOn"`
 }
 
-type CreateAuthConfigRequest1 struct {
-	Endpoint string   `bson:"endpoint"`
-	Headers  []string `bson:"headers"`
+type CreateAuthConfig struct {
+	Endpoint       string          `bson:"endpoint"`
+	Headers        []string        `bson:"headers"`
+	RequestMethod  string          `bson:"requestMethod"`
+	ForwardHeaders []ForwardHeader `bson:"forwardHeaders"`
+	RolesKey       string          `bson:"rolesKey"`
+}
+
+// ForwardHeader represents the structure of the ForwardHeaders array
+type ForwardHeader struct {
+	Key     string `bson:"key"`
+	Address string `bson:"address"`
 }
