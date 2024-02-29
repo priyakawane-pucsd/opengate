@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"opengate/cache"
 	authconfig "opengate/services/authConfig"
 	"opengate/services/config"
 	"opengate/services/gateway"
@@ -22,11 +23,11 @@ type ServiceFactory struct {
 	authconfigService *authconfig.Service
 }
 
-func NewServiceFactory(ctx context.Context, cfg Config, repo Repository) *ServiceFactory {
+func NewServiceFactory(ctx context.Context, cfg Config, repo Repository, c cache.Cache) *ServiceFactory {
 	factory := ServiceFactory{}
 	factory.pingService = ping.NewService(ctx, repo)
 	factory.configService = config.NewService(ctx, repo)
-	factory.gatewayService = gateway.NewService(ctx, repo)
+	factory.gatewayService = gateway.NewService(ctx, repo, c)
 	factory.authconfigService = authconfig.NewService(ctx, repo)
 	return &factory
 }

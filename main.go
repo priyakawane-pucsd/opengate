@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"opengate/cache"
 	"opengate/config"
 	"opengate/controller"
 	"opengate/repository"
@@ -38,8 +39,9 @@ func main() {
 
 	ctx := context.Background()
 
+	cache := cache.NewCache(ctx, &cfg.Cache)
 	repo := repository.NewRepository(ctx, cfg.Repository)
-	srvFactory := services.NewServiceFactory(ctx, cfg.Service, repo)
+	srvFactory := services.NewServiceFactory(ctx, cfg.Service, repo, cache)
 	ctrl := controller.NewController(ctx, &cfg.Controller, srvFactory)
 	if err = ctrl.Listen(ctx); err != nil {
 		log.Panic(err)

@@ -14,4 +14,10 @@ Repository:
     Database: opengate
     UserName: bappa
     Password: bappa
+Cache:
+  Name: Redis
+  Redis:
+    Addr: localhost:6379
+    Password:
+    DB: 0
   

@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"opengate/cache"
 	"opengate/controller"
 	"opengate/repository"
 	"opengate/services"
@@ -15,6 +16,7 @@ type Config struct {
 	Controller controller.Config
 	Service    services.Config
 	Repository repository.Config
+	Cache      cache.Config
 }
 
 func GetConfig(env, path string) (*Config, error) {
