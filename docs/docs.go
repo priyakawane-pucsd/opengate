@@ -370,22 +370,20 @@ const docTemplate = `{
         "dto.CreateServiceConfigRequest": {
             "type": "object",
             "properties": {
-                "authorization": {
-                    "description": "new",
-                    "type": "boolean"
+                "apis": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.ServiceApis"
+                    }
                 },
                 "endpoint": {
                     "type": "string"
                 },
-                "regex": {
+                "name": {
                     "type": "string"
                 },
-                "roles": {
-                    "description": "new",
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                "regex": {
+                    "type": "string"
                 }
             }
         },
@@ -431,6 +429,23 @@ const docTemplate = `{
                 "message": {},
                 "statusCode": {
                     "type": "integer"
+                }
+            }
+        },
+        "dto.ServiceApis": {
+            "type": "object",
+            "properties": {
+                "authorization": {
+                    "type": "boolean"
+                },
+                "regex": {
+                    "type": "string"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },

@@ -16,12 +16,12 @@ func convertToListServiceConfigResponse(configs []*dao.Config) []dto.Config {
 }
 
 func convertToServiceConfigResponse(config *dao.Config) *dto.Config {
-	srvCof := dto.CreateServiceConfigRequest(*config.ServiceConfig)
+	//srvCof := dto.CreateServiceConfigRequest(*config.ServiceConfig)
 	return &dto.Config{
 		// Map fields from dao.ServiceConfig to dto.ServiceConfigResponse
 		Id:            config.Id,
 		Type:          config.Type,
-		ServiceConfig: &srvCof,
+		ServiceConfig: &dto.CreateServiceConfigRequest{},
 		CreatedOn:     strconv.FormatInt(config.CreatedOn, 10),
 		UpdatedOn:     strconv.FormatInt(config.UpdatedOn, 10),
 	}

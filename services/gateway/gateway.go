@@ -43,7 +43,7 @@ func NewService(ctx context.Context, repo Repository, c cache.Cache) *Service {
 }
 
 // completed this function
-func (s *Service) getConfig(ctx context.Context, urlPath string) *dao.Config {
+func (s *Service) getConfig(ctx context.Context, urlPath string) *dao.ServiceConfig {
 	for _, c := range s.srvConfigs {
 		r, err := regexp.Compile(c.ServiceConfig.Regex)
 		if err != nil {
@@ -53,7 +53,23 @@ func (s *Service) getConfig(ctx context.Context, urlPath string) *dao.Config {
 
 		match := r.FindString(urlPath)
 		if match != "" {
-			return c
+			return c.ServiceConfig
+		}
+	}
+	return nil
+}
+
+func (s *Service) getApiConfig(ctx context.Context, urlPath string, serviceConfig *dao.ServiceConfig) *dao.ServiceApis {
+	for _, c := range serviceConfig.Apis {
+		r, err := regexp.Compile(c.Regex)
+		if err != nil {
+			logger.Error(ctx, "invalid regular expression in config: %v", c)
+			continue
+		}
+
+		match := r.FindString(urlPath)
+		if match != "" {
+			return &c
 		}
 	}
 	return nil
@@ -65,15 +81,20 @@ func (s *Service) HandleRequest(ctx *gin.Context) error {
 		return utils.NewCustomError(http.StatusNotFound, "unknown service")
 	}
 
+	apiCfg := s.getApiConfig(ctx, ctx.Param("path"), cfg)
+	if apiCfg == nil {
+		return utils.NewCustomError(http.StatusNotFound, "unknown service")
+	}
+
 	//If authorization true then verify authorization
-	if cfg.ServiceConfig.Authorization {
+	if apiCfg.Authorization {
 		err := s.authorizeAndModifyRequest(ctx)
 		if err != nil {
 			return err
 		}
 	}
 
-	remote, err := url.Parse(cfg.ServiceConfig.Endpoint)
+	remote, err := url.Parse(cfg.Endpoint)
 	if err != nil {
 		return utils.NewCustomError(http.StatusInternalServerError, "invalid endpoint config in db")
 	}

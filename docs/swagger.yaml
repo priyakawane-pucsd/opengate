@@ -68,18 +68,16 @@ definitions:
     type: object
   dto.CreateServiceConfigRequest:
     properties:
-      authorization:
-        description: new
-        type: boolean
+      apis:
+        items:
+          $ref: '#/definitions/dto.ServiceApis'
+        type: array
       endpoint:
+        type: string
+      name:
         type: string
       regex:
         type: string
-      roles:
-        description: new
-        items:
-          type: string
-        type: array
     type: object
   dto.DeleteConfigResponse:
     properties:
@@ -109,6 +107,17 @@ definitions:
       message: {}
       statusCode:
         type: integer
+    type: object
+  dto.ServiceApis:
+    properties:
+      authorization:
+        type: boolean
+      regex:
+        type: string
+      roles:
+        items:
+          type: string
+        type: array
     type: object
   utils.CustomError:
     properties:

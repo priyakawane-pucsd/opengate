@@ -5,7 +5,6 @@ import (
 	"time"
 )
 
-// 13-02-2024 Newly added
 type CreateConfigServiceRequest struct {
 	Id            string                     `json:"_id,omitempty"`
 	Type          string                     `json:"type,omitempty"`
@@ -13,31 +12,47 @@ type CreateConfigServiceRequest struct {
 }
 
 type CreateServiceConfigRequest struct {
-	Endpoint      string   `json:"endpoint"`
+	Name     string        `json:"name"`
+	Endpoint string        `json:"endpoint"`
+	Regex    string        `json:"regex"`
+	Apis     []ServiceApis `json:"apis"`
+}
+
+func (sc *CreateServiceConfigRequest) ToDaoObject() *dao.ServiceConfig {
+	var apis []dao.ServiceApis
+	for _, v := range sc.Apis {
+		apis = append(apis, dao.ServiceApis{
+			Authorization: v.Authorization,
+			Regex:         v.Regex,
+			Roles:         v.Roles,
+		})
+	}
+	return &dao.ServiceConfig{
+		Name:     sc.Name,
+		Endpoint: sc.Endpoint,
+		Regex:    sc.Regex,
+		Apis:     apis,
+	}
+}
+
+type ServiceApis struct {
 	Regex         string   `json:"regex"`
-	Authorization bool     `json:"authorization"` //new
-	Roles         []string `json:"roles"`         //new
+	Authorization bool     `json:"authorization"`
+	Roles         []string `json:"roles"`
 }
 
 type GetServiceConfigRequestById struct {
 	Id string `json:"_id,omitempty"`
 }
 
-// new added
 func (r *CreateConfigServiceRequest) ToMongoObject() *dao.Config {
-	serConf := dao.ServiceConfig(r.ServiceConfig)
 	return &dao.Config{
 		Id:            r.Id,
 		Type:          r.Type,
-		ServiceConfig: &serConf,
+		ServiceConfig: r.ServiceConfig.ToDaoObject(),
 		CreatedOn:     time.Now().UnixMilli(),
 		UpdatedOn:     time.Now().UnixMilli(),
 	}
-}
-
-type ConfigByIdResponse struct {
-	Config     Config `json:"config"`
-	StatusCode int    `json:"statusCode"`
 }
 
 type CreateConfigServiceResponse struct {
@@ -62,4 +77,9 @@ type Config struct {
 	AuthConfig    *AuthConfig                 `json:"authConfig,omitempty"`
 	CreatedOn     string                      `json:"createdOn"`
 	UpdatedOn     string                      `json:"updatedOn"`
+}
+
+type ConfigByIdResponse struct {
+	Config     Config `json:"config"`
+	StatusCode int    `json:"statusCode"`
 }
