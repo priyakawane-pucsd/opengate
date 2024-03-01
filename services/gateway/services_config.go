@@ -16,8 +16,7 @@ func (s *Service) getServiceConfig(ctx context.Context, urlPath string) *dao.Ser
 			continue
 		}
 
-		match := r.FindString(urlPath)
-		if match != "" {
+		if r.Match([]byte(urlPath)) {
 			return c.ServiceConfig
 		}
 	}
@@ -32,14 +31,9 @@ func (s *Service) getApiConfig(ctx context.Context, urlPath string, serviceConfi
 			continue
 		}
 
-		match := r.FindString(urlPath)
-		if match != "" {
+		if r.Match([]byte(urlPath)) {
 			return &c
 		}
 	}
-	return nil
-}
-
-func (s *Service) populateServiceConfig(ctx context.Context) error {
 	return nil
 }
