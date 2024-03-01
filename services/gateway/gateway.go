@@ -6,6 +6,7 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"opengate/cache"
+	"opengate/constants"
 	"opengate/models/dao"
 	"opengate/utils"
 	"regexp"
@@ -16,14 +17,14 @@ import (
 
 type Service struct {
 	repo       Repository
-	srvConfigs []*dao.ServiceConfig
-	authConfig *dao.AuthConfig
+	srvConfigs []*dao.Config
+	authConfig *dao.Config
 	cache      cache.Cache
 }
 
 type Repository interface {
-	GetAllConfigs(ctx context.Context) ([]*dao.ServiceConfig, error)
-	GetAuthConfig(ctx context.Context) (*dao.AuthConfig, error)
+	GetAllConfigs(ctx context.Context) ([]*dao.Config, error)
+	GetConfigById(ctx context.Context, id string) (*dao.Config, error)
 }
 
 func NewService(ctx context.Context, repo Repository, c cache.Cache) *Service {
@@ -33,16 +34,16 @@ func NewService(ctx context.Context, repo Repository, c cache.Cache) *Service {
 		return nil
 	}
 
-	auth, err := repo.GetAuthConfig(ctx)
+	auth, err := repo.GetConfigById(ctx, constants.AUTH_CONFIG)
 	if err != nil {
-		logger.Panic(ctx, "getting service configs")
+		logger.Panic(ctx, "failed to get authConfig configs")
 		return nil
 	}
 	return &Service{repo: repo, srvConfigs: configs, authConfig: auth, cache: c}
 }
 
 // completed this function
-func (s *Service) getConfig(ctx context.Context, urlPath string) *dao.ServiceConfig {
+func (s *Service) getConfig(ctx context.Context, urlPath string) *dao.Config {
 	for _, c := range s.srvConfigs {
 		r, err := regexp.Compile(c.ServiceConfig.Regex)
 		if err != nil {

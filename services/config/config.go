@@ -12,9 +12,9 @@ type Service struct {
 }
 
 type Repository interface {
-	CreateUpdateConfig(ctx context.Context, cfg *dao.ServiceConfig) error
-	GetAllConfigs(ctx context.Context) ([]*dao.ServiceConfig, error)
-	GetConfigById(ctx context.Context, id string) (*dao.ServiceConfig, error)
+	CreateUpdateConfig(ctx context.Context, cfg *dao.Config) error
+	GetAllConfigs(ctx context.Context) ([]*dao.Config, error)
+	GetConfigById(ctx context.Context, id string) (*dao.Config, error)
 	DeleteConfigById(ctx context.Context, id string) error
 }
 
@@ -69,4 +69,13 @@ func (s *Service) DeleteConfigById(ctx context.Context, id string) (*dto.DeleteC
 		StatusCode: http.StatusOK,
 	}
 	return response, nil
+}
+
+func (s *Service) CreateUpdateAuthConfig(ctx context.Context, req *dto.CreateAuthConfigServiceRequest) (*dto.CreateAuthConfigResponse, error) {
+	cfg := req.ToMongoObject()
+	err := s.repo.CreateUpdateConfig(ctx, cfg)
+	if err != nil {
+		return nil, err
+	}
+	return &dto.CreateAuthConfigResponse{StatusCode: http.StatusCreated, Id: cfg.Id}, nil
 }

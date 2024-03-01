@@ -1,13 +1,12 @@
 package dto
 
 import (
+	"opengate/constants"
 	"opengate/models/dao"
 	"time"
 )
 
 type CreateAuthConfigServiceRequest struct {
-	Id         string     `json:"_id,omitempty"`
-	Type       string     `json:"type,omitempty"`
 	AuthConfig AuthConfig `json:"authConfig,omitempty"`
 }
 
@@ -27,8 +26,8 @@ func dtoToDaoForwardHeaders(header []ForwardHeader) []dao.ForwardHeader {
 	return hds
 }
 
-func (c AuthConfig) toDaoAuthConfig() dao.CreateAuthConfig {
-	return dao.CreateAuthConfig{
+func (c AuthConfig) toDaoAuthConfig() dao.AuthConfig {
+	return dao.AuthConfig{
 		Endpoint:       c.Endpoint,
 		Headers:        c.Headers,
 		RequestMethod:  c.RequestMethod,
@@ -48,11 +47,12 @@ type CreateAuthConfigResponse struct {
 	StatusCode int    `json:"statusCode"`
 }
 
-func (r *CreateAuthConfigServiceRequest) ToMongoObject() *dao.AuthConfig {
-	return &dao.AuthConfig{
-		Id:         r.Id,
-		Type:       r.Type,
-		AuthConfig: r.AuthConfig.toDaoAuthConfig(),
+func (r *CreateAuthConfigServiceRequest) ToMongoObject() *dao.Config {
+	authConf := r.AuthConfig.toDaoAuthConfig()
+	return &dao.Config{
+		Id:         constants.AUTH_CONFIG,
+		Type:       constants.AUTH_CONFIG,
+		AuthConfig: &authConf,
 		CreatedOn:  time.Now().UnixMilli(),
 		UpdatedOn:  time.Now().UnixMilli(),
 	}

@@ -24,19 +24,20 @@ type GetServiceConfigRequestById struct {
 }
 
 // new added
-func (r *CreateConfigServiceRequest) ToMongoObject() *dao.ServiceConfig {
-	return &dao.ServiceConfig{
+func (r *CreateConfigServiceRequest) ToMongoObject() *dao.Config {
+	serConf := dao.ServiceConfig(r.ServiceConfig)
+	return &dao.Config{
 		Id:            r.Id,
 		Type:          r.Type,
-		ServiceConfig: dao.CreateServiceConfigRequest(r.ServiceConfig),
+		ServiceConfig: &serConf,
 		CreatedOn:     time.Now().UnixMilli(),
 		UpdatedOn:     time.Now().UnixMilli(),
 	}
 }
 
 type ConfigByIdResponse struct {
-	Config     ServiceConfig `json:"config"`
-	StatusCode int           `json:"statusCode"`
+	Config     Config `json:"config"`
+	StatusCode int    `json:"statusCode"`
 }
 
 type CreateConfigServiceResponse struct {
@@ -45,8 +46,8 @@ type CreateConfigServiceResponse struct {
 }
 
 type ListConfigResponse struct {
-	Configs    []ServiceConfig `json:"configs"`
-	StatusCode int             `json:"statusCode"`
+	Configs    []Config `json:"configs"`
+	StatusCode int      `json:"statusCode"`
 }
 
 type DeleteConfigResponse struct {
@@ -54,10 +55,11 @@ type DeleteConfigResponse struct {
 	StatusCode int    `json:"status_code"`
 }
 
-type ServiceConfig struct {
-	Id            string                     `json:"_id,omitempty"`
-	Type          string                     `json:"type,omitempty"`
-	ServiceConfig CreateServiceConfigRequest `json:"serviceConfig,omitempty"`
-	CreatedOn     string                     `json:"createdOn"`
-	UpdatedOn     string                     `json:"updatedOn"`
+type Config struct {
+	Id            string                      `json:"_id,omitempty"`
+	Type          string                      `json:"type,omitempty"`
+	ServiceConfig *CreateServiceConfigRequest `json:"serviceConfig,omitempty"`
+	AuthConfig    *AuthConfig                 `json:"authConfig,omitempty"`
+	CreatedOn     string                      `json:"createdOn"`
+	UpdatedOn     string                      `json:"updatedOn"`
 }

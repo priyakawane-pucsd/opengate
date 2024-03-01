@@ -44,7 +44,7 @@ func (c *Controller) Listen(ctx context.Context) error {
 	swagger.NewSwaggerController(ctx).Register(router)
 	config.NewConfigController(ctx, &c.config.Config, c.srvFactory.GetConfigService()).Register(router)
 	gateway.NewGatewayController(ctx, &c.config.Gateway, c.srvFactory.GetGatewayService()).Register(router)
-	authconfig.NewAuthConfigController(ctx, &c.config.AuthConfig, c.srvFactory.GetAuthConfigService()).Register(router)
+	authconfig.NewAuthConfigController(ctx, &c.config.AuthConfig, c.srvFactory.GetConfigService()).Register(router)
 
 	logger.Info(ctx, "swagger link: http://localhost:%d/opengate/swagger/index.html", c.config.Port)
 	log.Printf("HTTP server started listening on :%d", c.config.Port)

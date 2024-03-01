@@ -16,10 +16,25 @@ definitions:
       rolesKey:
         type: string
     type: object
+  dto.Config:
+    properties:
+      _id:
+        type: string
+      authConfig:
+        $ref: '#/definitions/dto.AuthConfig'
+      createdOn:
+        type: string
+      serviceConfig:
+        $ref: '#/definitions/dto.CreateServiceConfigRequest'
+      type:
+        type: string
+      updatedOn:
+        type: string
+    type: object
   dto.ConfigByIdResponse:
     properties:
       config:
-        $ref: '#/definitions/dto.ServiceConfig'
+        $ref: '#/definitions/dto.Config'
       statusCode:
         type: integer
     type: object
@@ -32,12 +47,8 @@ definitions:
     type: object
   dto.CreateAuthConfigServiceRequest:
     properties:
-      _id:
-        type: string
       authConfig:
         $ref: '#/definitions/dto.AuthConfig'
-      type:
-        type: string
     type: object
   dto.CreateConfigServiceRequest:
     properties:
@@ -88,7 +99,7 @@ definitions:
     properties:
       configs:
         items:
-          $ref: '#/definitions/dto.ServiceConfig'
+          $ref: '#/definitions/dto.Config'
         type: array
       statusCode:
         type: integer
@@ -98,19 +109,6 @@ definitions:
       message: {}
       statusCode:
         type: integer
-    type: object
-  dto.ServiceConfig:
-    properties:
-      _id:
-        type: string
-      createdOn:
-        type: string
-      serviceConfig:
-        $ref: '#/definitions/dto.CreateServiceConfigRequest'
-      type:
-        type: string
-      updatedOn:
-        type: string
     type: object
   utils.CustomError:
     properties:

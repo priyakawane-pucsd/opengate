@@ -289,11 +289,34 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.Config": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "authConfig": {
+                    "$ref": "#/definitions/dto.AuthConfig"
+                },
+                "createdOn": {
+                    "type": "string"
+                },
+                "serviceConfig": {
+                    "$ref": "#/definitions/dto.CreateServiceConfigRequest"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updatedOn": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.ConfigByIdResponse": {
             "type": "object",
             "properties": {
                 "config": {
-                    "$ref": "#/definitions/dto.ServiceConfig"
+                    "$ref": "#/definitions/dto.Config"
                 },
                 "statusCode": {
                     "type": "integer"
@@ -314,14 +337,8 @@ const docTemplate = `{
         "dto.CreateAuthConfigServiceRequest": {
             "type": "object",
             "properties": {
-                "_id": {
-                    "type": "string"
-                },
                 "authConfig": {
                     "$ref": "#/definitions/dto.AuthConfig"
-                },
-                "type": {
-                    "type": "string"
                 }
             }
         },
@@ -400,7 +417,7 @@ const docTemplate = `{
                 "configs": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.ServiceConfig"
+                        "$ref": "#/definitions/dto.Config"
                     }
                 },
                 "statusCode": {
@@ -414,26 +431,6 @@ const docTemplate = `{
                 "message": {},
                 "statusCode": {
                     "type": "integer"
-                }
-            }
-        },
-        "dto.ServiceConfig": {
-            "type": "object",
-            "properties": {
-                "_id": {
-                    "type": "string"
-                },
-                "createdOn": {
-                    "type": "string"
-                },
-                "serviceConfig": {
-                    "$ref": "#/definitions/dto.CreateServiceConfigRequest"
-                },
-                "type": {
-                    "type": "string"
-                },
-                "updatedOn": {
-                    "type": "string"
                 }
             }
         },
